@@ -324,7 +324,6 @@ sub _extrude_path {
             $self->config->max_volumetric_speed / $path->mm3_per_mm,
         );
     }
-    my $F = $speed * 60;  #?convert mm/sec to mm/min
     
     # extrude arc or line
     $gcode .= ";_BRIDGE_FAN_START\n" if $path->is_bridge && $self->enable_cooling_markers;
