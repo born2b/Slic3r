@@ -257,6 +257,11 @@ sub make_fill {
         }
         my $mm3_per_mm = $flow->mm3_per_mm;
         
+        #born2b
+        my $mm3_per_mmTOP = $mm3_per_mm * 1.04;
+        my $mm3_per_mmBRIDGE = $mm3_per_mm * 1.4;
+        #born2b
+        
         # save into layer
         {
             my $role = $is_bridge ? EXTR_ROLE_BRIDGE
@@ -269,7 +274,11 @@ sub make_fill {
                 map Slic3r::ExtrusionPath->new(
                     polyline    => $_,
                     role        => $role,
-                    mm3_per_mm  => $mm3_per_mm,
+			        #born2b
+                    mm3_per_mm  => ($is_bridge
+                        ? $mm3_per_mmBRIDGE
+                        : ($surface->surface_type == S_TYPE_TOP) ? $mm3_per_mmTOP : $mm3_per_mm),
+			        #born2b
                     width       => $flow->width,
                     height      => $flow->height,
                 ), @polylines,
