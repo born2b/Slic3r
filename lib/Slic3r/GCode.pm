@@ -100,6 +100,10 @@ sub change_layer {
     # forget last wiping path as wiping after raising Z is pointless
     $self->wipe->path(undef);
     
+	#born2b
+	$gcode .= "<KEEPWAIT>\n";
+    #born2b
+
     return $gcode;
 }
 
@@ -298,7 +302,7 @@ sub _extrude_path {
             die "Invalid speed";
         }
     }
-    my $F = $speed * 60;  # convert mm/sec to mm/min
+    my $F = $speed * 60;  #?convert mm/sec to mm/min
     
     if ($self->first_layer) {
         $F = $self->config->get_abs_value_over('first_layer_speed', $F/60) * 60;
@@ -551,7 +555,9 @@ sub wipe {
     
     # Reduce feedrate a bit; travel speed is often too high to move on existing material.
     # Too fast = ripping of existing material; too slow = short wipe path, thus more blob.
-    my $wipe_speed = $gcodegen->writer->config->get('travel_speed') * 0.8;
+	#born2b
+    my $wipe_speed = $gcodegen->writer->config->get('travel_speed') * 0.25;
+	#born2b
     
     # get the retraction length
     my $length = $toolchange

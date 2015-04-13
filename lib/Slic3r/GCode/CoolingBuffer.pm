@@ -74,6 +74,15 @@ sub flush {
     }
     $gcode =~ s/;_WIPE//g;
     
+    #born2b
+	if ($elapsed < $self->config->slowdown_below_layer_time){
+	    my $waitsec = sprintf("G91\nG1 Z1\nG4 P%d\nG1 Z-1\nG90\n", 1000 * ($self->config->slowdown_below_layer_time - $elapsed));
+        $gcode =~ s/<KEEPWAIT>\n/$waitsec/;
+    } else{
+        $gcode =~ s/<KEEPWAIT>\n//;
+    }
+    #born2b
+
     return $gcode;
 }
 
