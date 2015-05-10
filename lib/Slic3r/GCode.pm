@@ -556,7 +556,7 @@ sub wipe {
     # Reduce feedrate a bit; travel speed is often too high to move on existing material.
     # Too fast = ripping of existing material; too slow = short wipe path, thus more blob.
 	#born2b
-    my $wipe_speed = $gcodegen->writer->config->get('travel_speed') * 0.25;
+    my $wipe_speed = $gcodegen->writer->config->get('travel_speed') * 0.125;
 	#born2b
     
     # get the retraction length
