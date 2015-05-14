@@ -227,7 +227,8 @@ sub extrude_loop {
         $point->rotate($angle, $first_segment->a);
         
         # generate the travel move
-        $gcode .= $self->writer->travel_to_xy($self->point_to_gcode($point), "move inwards before travel");
+        #born2b
+        $gcode .= $self->writer->travel_to_xy_slow($self->point_to_gcode($point), "move inwards before travel");
     }
     
     return $gcode;
@@ -414,6 +415,9 @@ sub retract {
     return "" if !defined $self->writer->extruder;
     
     my $gcode = "";
+
+    $gcode .= $self->writer->lift
+        if $self->writer->extruder->retract_length > 0 || $self->config->use_firmware_retraction;
     
     # wipe (if it's enabled for this extruder and we have a stored wipe path)
     if ($self->config->get_at('wipe', $self->writer->extruder->id) && $self->wipe->path) {
@@ -427,8 +431,6 @@ sub retract {
     $gcode .= $toolchange ? $self->writer->retract_for_toolchange : $self->writer->retract;
     
     $gcode .= $self->writer->reset_e;
-    $gcode .= $self->writer->lift
-        if $self->writer->extruder->retract_length > 0 || $self->config->use_firmware_retraction;
     
     return $gcode;
 }
@@ -556,7 +558,7 @@ sub wipe {
     # Reduce feedrate a bit; travel speed is often too high to move on existing material.
     # Too fast = ripping of existing material; too slow = short wipe path, thus more blob.
 	#born2b
-    my $wipe_speed = $gcodegen->writer->config->get('travel_speed') * 0.125;
+    my $wipe_speed = $gcodegen->writer->config->get('travel_speed') * 0.2;
 	#born2b
     
     # get the retraction length

@@ -36,6 +36,7 @@ class GCodeWriter {
     std::string toolchange(unsigned int extruder_id);
     std::string set_speed(double F, const std::string &comment = std::string());
     std::string travel_to_xy(const Pointf &point, const std::string &comment = std::string());
+    std::string travel_to_xy_slow(const Pointf &point, const std::string &comment = std::string());
     std::string travel_to_xyz(const Pointf3 &point, const std::string &comment = std::string());
     std::string travel_to_z(double z, const std::string &comment = std::string());
     bool will_move_z(double z) const;
