@@ -297,6 +297,22 @@ GCodeWriter::travel_to_xy(const Pointf &point, const std::string &comment)
     return gcode.str();
 }
 
+/*born2b*/
+std::string
+GCodeWriter::travel_to_xy_slow(const Pointf &point, const std::string &comment)
+{
+    this->_pos.x = point.x;
+    this->_pos.y = point.y;
+    
+    std::ostringstream gcode;
+    gcode << "G1 X" << XYZF_NUM(point.x)
+          <<   " Y" << XYZF_NUM(point.y)
+          <<   " F600";
+    COMMENT(comment);
+    gcode << "\n";
+    return gcode.str();
+}
+
 std::string
 GCodeWriter::travel_to_xyz(const Pointf3 &point, const std::string &comment)
 {

@@ -32,6 +32,8 @@
     std::string set_speed(double F, std::string comment = std::string());
     std::string travel_to_xy(Pointf* point, std::string comment = std::string())
         %code{% RETVAL = THIS->travel_to_xy(*point, comment); %};
+    std::string travel_to_xy_slow(Pointf* point, std::string comment = std::string())
+        %code{% RETVAL = THIS->travel_to_xy_slow(*point, comment); %};
     std::string travel_to_xyz(Pointf3* point, std::string comment = std::string())
         %code{% RETVAL = THIS->travel_to_xyz(*point, comment); %};
     std::string travel_to_z(double z, std::string comment = std::string());
