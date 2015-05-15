@@ -79,9 +79,9 @@ sub flush {
 	    my $waitspeed = 120 / ($self->config->slowdown_below_layer_time - $elapsed) + 1;
 		my $waitcode = "";
 		if ($waitspeed < 600){
-			$waitcode = sprintf("G91\nG1 Z0.4 F1200\nG1 E-0.5 F%d\nG1 E0.5 F%d\nG1 Z-0.4 F1200\nG90\n", $waitspeed, $waitspeed);
+			$waitcode = sprintf("G91\nG1 Z0.4 F1200\nG1 E-0.5 F%d\nG1 E0.5 F%d\nG1 Z-0.3 F600\nG1 Z0.1 F200\nG1 Z-0.2 F600\nG90\n", $waitspeed, $waitspeed);
 		} else{
-			$waitcode = "G91\nG1 Z0.4 E-0.5 F600\nG1 Z-0.4 E0.5 F600\nG90\n";
+			$waitcode = "G91\nG1 Z0.4 E-0.5 F600\nG1 Z-0.3 E0.5 F600\nG1 Z0.1 F200\nG1 Z-0.2 F600\nG90\n";
 		}
 		$gcode =~ s/<KEEPWAIT>\n/$waitcode/;
     } else{

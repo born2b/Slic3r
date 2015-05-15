@@ -598,6 +598,10 @@ sub wipe {
         }
         $gcodegen->writer->extruder->set_retracted($gcodegen->writer->extruder->retracted + $retracted);
         
+		#born2b
+        $gcode .= $gcodegen->writer->set_speed(600);
+        $gcode .= $gcodegen->writer->travel_to_xy_slow($gcodegen->point_to_gcode($gcodegen->last_pos), "wipe_turn_born2b");
+
         # prevent wiping again on same path
         $self->path(undef);
     }
