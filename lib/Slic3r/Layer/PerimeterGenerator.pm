@@ -100,8 +100,8 @@ sub process {
         my @last = @{$surface->expolygon->simplify_p(&Slic3r::SCALED_RESOLUTION)};
         if ($loop_number >= 0) {  # no loops = -1
         
-            my @contours    = ();   # depth => [ Polygon, Polygon ... ]
-            my @holes       = ();   # depth => [ Polygon, Polygon ... ]
+            my @contours    = ();   #?depth => [ Polygon, Polygon ... ]
+            my @holes       = ();   #?depth => [ Polygon, Polygon ... ]
             my @thin_walls  = ();   # Polylines
         
             # we loop one time more than needed in order to find gaps after the last perimeter was applied
@@ -174,8 +174,8 @@ sub process {
                         # (but still long enough to escape the area threshold) that gap fill
                         # won't be able to fill but we'd still remove from infill area
                         my $diff = diff_ex(
-                            offset(\@last, -0.5*$pspacing),
-                            offset(\@offsets, +0.5*$pspacing + 10),  # safety offset
+                            offset(\@last, -0.5*$distance),
+                            offset(\@offsets, +0.5*$distance + 10),  # safety offset
                         );
                         push @gaps, map $_->clone, map @$_, grep abs($_->area) >= $gap_area_threshold, @$diff;
                     }
@@ -282,11 +282,11 @@ sub process {
                 );
             }
             
-            # where $pwidth < thickness < 2*$pspacing, infill with width = 1.5*$pwidth
-            # where 0.5*$pwidth < thickness < $pwidth, infill with width = 0.5*$pwidth
+            # where $pwidth < thickness < 2*$pspacing, infill with width = 2*$pwidth
+            # where 0.1*$pwidth < thickness < $pwidth, infill with width = 1*$pwidth
             my @gap_sizes = (
-                [ $pwidth, 2*$pspacing, unscale 1.5*$pwidth ],
-                [ 0.1*$pwidth, $pwidth, unscale 0.5*$pwidth ],
+                [ $pwidth, 2*$pspacing, unscale 2*$pwidth ],
+                [ 0.1*$pwidth, $pwidth, unscale 1*$pwidth ],
             );
             foreach my $gap_size (@gap_sizes) {
                 my @gap_fill = $self->_fill_gaps(@$gap_size, \@gaps);
@@ -359,8 +359,8 @@ sub _traverse_loops {
         
         # detect overhanging/bridging perimeters
         my @paths = ();
-        if ($self->config->overhangs && $self->layer_id > 0
-            && !($self->object_config->support_material && $self->object_config->support_material_contact_distance == 0)) {
+        if ($self->config->overhangs && $self->layer_id > 0) {
+            # born2b
             # get non-overhang paths by intersecting this loop with the grown lower slices
             foreach my $polyline (@{ intersection_ppl([ $loop->polygon ], $self->_lower_slices_p) }) {
                 push @paths, Slic3r::ExtrusionPath->new(
@@ -372,14 +372,15 @@ sub _traverse_loops {
                 );
             }
             
+	        if ($self->object_config->support_material_contact_distance < 0.4) {
             # get overhang paths by checking what parts of this loop fall 
-            # outside the grown lower slices (thus where the distance between
+            #?outside the grown lower slices (thus where the distance between
             # the loop centerline and original lower slices is >= half nozzle diameter
             foreach my $polyline (@{ diff_ppl([ $loop->polygon ], $self->_lower_slices_p) }) {
                 push @paths, Slic3r::ExtrusionPath->new(
                     polyline        => $polyline,
-                    role            => EXTR_ROLE_OVERHANG_PERIMETER,
-                    mm3_per_mm      => $self->_mm3_per_mm_overhang,
+                    role            => $role,
+                    mm3_per_mm      => $self->_mm3_per_mm_overhang * 1.4,
                     width           => $self->overhang_flow->width,
                     height          => $self->overhang_flow->height,
                 );
@@ -388,9 +389,30 @@ sub _traverse_loops {
             # reapply the nearest point search for starting point
             # (clone because the collection gets DESTROY'ed)
             # We allow polyline reversal because Clipper may have randomly
-            # reversed polylines during clipping.
+            #?reversed polylines during clipping.
             my $collection = Slic3r::ExtrusionPath::Collection->new(@paths); # temporary collection
             @paths = map $_->clone, @{$collection->chained_path(0)};
+			} else {
+            # get overhang paths by checking what parts of this loop fall 
+            #?outside the grown lower slices (thus where the distance between
+            # the loop centerline and original lower slices is >= half nozzle diameter
+            foreach my $polyline (@{ diff_ppl([ $loop->polygon ], $self->_lower_slices_p) }) {
+                push @paths, Slic3r::ExtrusionPath->new(
+                    polyline        => $polyline,
+                    role            => EXTR_ROLE_OVERHANG_PERIMETER,
+                    mm3_per_mm      => $self->_mm3_per_mm_overhang * 1.4,
+                    width           => $self->overhang_flow->width,
+                    height          => $self->overhang_flow->height,
+                );
+            }
+            
+            # reapply the nearest point search for starting point
+            # (clone because the collection gets DESTROY'ed)
+            # We allow polyline reversal because Clipper may have randomly
+            #?reversed polylines during clipping.
+            my $collection = Slic3r::ExtrusionPath::Collection->new(@paths); # temporary collection
+            @paths = map $_->clone, @{$collection->chained_path(0)};
+			}
         } else {
             push @paths, Slic3r::ExtrusionPath->new(
                 polyline        => $loop->polygon->split_at_first_point,

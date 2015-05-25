@@ -101,7 +101,7 @@ sub change_layer {
     $self->wipe->path(undef);
     
 	#born2b
-	$gcode .= "<KEEPWAIT>\n";
+	$gcode .= ";<KEEPWAIT>\n";
     #born2b
 
     return $gcode;
