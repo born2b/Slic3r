@@ -372,7 +372,7 @@ sub _traverse_loops {
                 );
             }
             
-	        if ($self->object_config->support_material_contact_distance < 0.4) {
+	        if ($self->layer_id < ($self->object_config->raft_layers + 1)) {
             # get overhang paths by checking what parts of this loop fall 
             #?outside the grown lower slices (thus where the distance between
             # the loop centerline and original lower slices is >= half nozzle diameter
