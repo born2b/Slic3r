@@ -61,7 +61,7 @@ sub generate {
     $self->clip_with_shape($interface, $shape) if @$shape;
     
     # Propagate contact layers and interface layers downwards to generate
-    # the main support layers.
+    #?the main support layers.
     my ($base) = $self->generate_base_layers($support_z, $contact, $interface, $top);
     $self->clip_with_object($base, $support_z, $object);
     $self->clip_with_shape($base, $shape) if @$shape;
@@ -99,7 +99,7 @@ sub contact_area {
     
     # determine contact areas
     my %contact  = ();  # contact_z => [ polygons ]
-    my %overhang = ();  # contact_z => [ polygons ] - this stores the actual overhang supported by each contact layer
+    my %overhang = ();  #?contact_z => [ polygons ] - this stores the actual overhang supported by each contact layer
     for my $layer_id (0 .. $#{$object->layers}) {
         # note $layer_id might != $layer->id when raft_layers > 0
         # so $layer_id == 0 means first object layer
@@ -306,7 +306,7 @@ sub object_top {
             # we considered)
             my $min_top = min(keys %top) // max(keys %$contact);
             # use <= instead of just < because otherwise we'd ignore any contact regions
-            # having the same Z of top layers
+            #?having the same Z of top layers
             push @$projection, map @{$contact->{$_}}, grep { $_ > $layer->print_z && $_ <= $min_top } keys %$contact;
             
             # now find whether any projection falls onto this top surface
@@ -440,7 +440,7 @@ sub generate_bottom_interface_layers {
         my $interface_layers = 0;
         
         # loop through support layers until we find the one(s) right above the top
-        # surface
+        #?surface
         foreach my $layer_id (0 .. $#$support_z) {
             my $z = $support_z->[$layer_id];
             next unless $z > $top_z;
@@ -510,7 +510,7 @@ sub generate_base_layers {
 
 # This method removes object silhouette from support material
 # (it's used with interface and base only). It removes a bit more,
-# leaving a thin gap between object and support in the XY plane.
+#?leaving a thin gap between object and support in the XY plane.
 sub clip_with_object {
     my ($self, $support, $support_z, $object) = @_;
     
@@ -524,7 +524,7 @@ sub clip_with_object {
         
         # $layer->slices contains the full shape of layer, thus including
         # perimeter's width. $support contains the full shape of support
-        # material, thus including the width of its foremost extrusion.
+        #?material, thus including the width of its foremost extrusion.
         # We leave a gap equal to a full extrusion width.
         $support->{$i} = diff(
             $support->{$i},
@@ -742,12 +742,12 @@ sub generate_toolpaths {
             # base flange
             if ($layer_id == 0) {
                 $filler = $fillers{interface};
-                $filler->angle($self->object_config->support_material_angle + 90);
-                $density        = 0.5;
+                $filler->angle($self->object_config->support_material_angle);
+                $density        = 0.6; #born2b
                 $base_flow      = $self->first_layer_flow;
                 
                 # use the proper spacing for first layer as we don't need to align
-                # its pattern to the other layers
+                #?its pattern to the other layers
                 $filler->spacing($base_flow->spacing);
             } else {
                 # draw a perimeter all around support infill
@@ -777,7 +777,13 @@ sub generate_toolpaths {
                 push @paths, map Slic3r::ExtrusionPath->new(
                     polyline    => Slic3r::Polyline->new(@$_),
                     role        => EXTR_ROLE_SUPPORTMATERIAL,
-                    mm3_per_mm  => $mm3_per_mm,
+                    
+			        #born2b
+                    mm3_per_mm  => ($layer_id
+                        ? $mm3_per_mm
+                        : $mm3_per_mm * 1.8),
+			        #born2b
+
                     width       => $base_flow->width,
                     height      => $layer->height,
                 ), @p;

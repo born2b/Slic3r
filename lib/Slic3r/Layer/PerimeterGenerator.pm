@@ -400,7 +400,7 @@ sub _traverse_loops {
                 push @paths, Slic3r::ExtrusionPath->new(
                     polyline        => $polyline,
                     role            => EXTR_ROLE_OVERHANG_PERIMETER,
-                    mm3_per_mm      => $self->_mm3_per_mm_overhang * 1.4,
+                    mm3_per_mm      => $self->_mm3_per_mm_overhang,
                     width           => $self->overhang_flow->width,
                     height          => $self->overhang_flow->height,
                 );
