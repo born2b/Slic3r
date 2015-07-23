@@ -1670,6 +1670,7 @@ src/libslic3r/ExtrusionEntityCollection.cpp
 src/libslic3r/ExtrusionEntityCollection.hpp
 src/libslic3r/Flow.cpp
 src/libslic3r/Flow.hpp
+src/libslic3r/GCode.cpp
 src/libslic3r/GCode.hpp
 src/libslic3r/GCodeWriter.cpp
 src/libslic3r/GCodeWriter.hpp
@@ -1751,6 +1752,7 @@ t/17_boundingbox.t
 t/18_motionplanner.t
 t/19_model.t
 t/20_print.t
+t/21_gcode.t
 xsp/BoundingBox.xsp
 xsp/BridgeDetector.xsp
 xsp/Clipper.xsp
@@ -1762,6 +1764,7 @@ xsp/ExtrusionEntityCollection.xsp
 xsp/ExtrusionLoop.xsp
 xsp/ExtrusionPath.xsp
 xsp/Flow.xsp
+xsp/GCode.xsp
 xsp/GCodeWriter.xsp
 xsp/Geometry.xsp
 xsp/GUI_3DScene.xsp

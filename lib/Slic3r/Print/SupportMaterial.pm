@@ -781,7 +781,7 @@ sub generate_toolpaths {
 			        #born2b
                     mm3_per_mm  => ($layer_id
                         ? $mm3_per_mm
-                        : $mm3_per_mm * 1.8),
+                        : $mm3_per_mm * 1.6),
 			        #born2b
 
                     width       => $base_flow->width,

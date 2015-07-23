@@ -263,7 +263,7 @@ sub make_fill {
         my $mm3_per_mm = $flow->mm3_per_mm;
         
         #born2b
-        my $mm3_per_mmTOP = $mm3_per_mm * 1.04;
+        my $mm3_per_mmTOP = $mm3_per_mm * 1.00;
         my $mm3_per_mmBRIDGE = $mm3_per_mm * 1.4;
         #born2b
         

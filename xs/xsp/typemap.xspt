@@ -125,6 +125,22 @@
 %typemap{Ref<PlaceholderParser>}{simple};
 %typemap{Clone<PlaceholderParser>}{simple};
 
+%typemap{AvoidCrossingPerimeters*};
+%typemap{Ref<AvoidCrossingPerimeters>}{simple};
+%typemap{Clone<AvoidCrossingPerimeters>}{simple};
+
+%typemap{Wipe*};
+%typemap{Ref<Wipe>}{simple};
+%typemap{Clone<Wipe>}{simple};
+
+%typemap{OozePrevention*};
+%typemap{Ref<OozePrevention>}{simple};
+%typemap{Clone<OozePrevention>}{simple};
+
+%typemap{GCode*};
+%typemap{Ref<GCode>}{simple};
+%typemap{Clone<GCode>}{simple};
+
 
 %typemap{Points};
 %typemap{Pointfs};

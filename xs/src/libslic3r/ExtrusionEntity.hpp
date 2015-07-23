@@ -13,6 +13,7 @@ class Extruder;
 
 /* Each ExtrusionRole value identifies a distinct set of { extruder, speed } */
 enum ExtrusionRole {
+    erNone,
     erPerimeter,
     erExternalPerimeter,
     erOverhangPerimeter,
@@ -78,9 +79,6 @@ class ExtrusionPath : public ExtrusionEntity
     bool is_infill() const;
     bool is_solid_infill() const;
     bool is_bridge() const;
-    std::string gcode(Extruder* extruder, double e, double F,
-        double xofs, double yofs, std::string extrusion_axis,
-        std::string gcode_line_suffix) const;
     Polygons grow() const;
     double min_mm3_per_mm() const {
         return this->mm3_per_mm;
