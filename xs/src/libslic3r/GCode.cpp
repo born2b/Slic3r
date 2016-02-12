@@ -316,6 +316,10 @@ GCode::change_layer(const Layer &layer)
     
     // forget last wiping path as wiping after raising Z is pointless
     this->wipe.reset_path();
+
+	//born2b
+	gcode += ";<KEEPWAIT>\n";
+    //born2b
     
     return gcode;
 }
