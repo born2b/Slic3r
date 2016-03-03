@@ -185,7 +185,10 @@ Wipe::wipe(GCode &gcodegen, bool toolchange)
             /*  Reduce retraction length a bit to avoid effective retraction speed to be greater than the configured one
                 due to rounding (TODO: test and/or better math for this)  */
             double dE = length * (segment_length / wipe_dist) * 0.95;
-            gcode += gcodegen.writer.set_speed(wipe_speed*60);
+			//born2b
+           // gcode += gcodegen.writer.set_speed(wipe_speed*60);
+            gcode += gcodegen.writer.set_speed(wipe_speed*15);
+			//born2b
             gcode += gcodegen.writer.extrude_to_xy(
                 gcodegen.point_to_gcode(line->b),
                 -dE,

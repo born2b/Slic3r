@@ -366,7 +366,10 @@ sub process_layer {
     # if we're going to apply spiralvase to this layer, disable loop clipping
     $self->_gcodegen->set_enable_loop_clipping(!defined $self->_spiral_vase || !$self->_spiral_vase->enable);
     
-    if (!$self->_second_layer_things_done && $layer->id == 1) {
+#born2b
+   # if (!$self->_second_layer_things_done && $layer->id == 1) {
+    if (!$self->_second_layer_things_done && $layer->id >= $self->config->disable_fan_first_layers) {
+#born2b
         for my $extruder (@{$self->_gcodegen->writer->extruders}) {
             my $temperature = $self->config->get_at('temperature', $extruder->id);
             $gcode .= $self->_gcodegen->writer->set_temperature($temperature, 0, $extruder->id)
