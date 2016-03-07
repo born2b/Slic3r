@@ -452,7 +452,9 @@ GCode::extrude(ExtrusionLoop loop, std::string description, double speed)
             Point c = a; a = b; b = c;
         }
         
-        double angle = paths.front().first_point().ccw_angle(a, b) / 3;
+         //born2b
+       //double angle = paths.front().first_point().ccw_angle(a, b) / 3;
+       double angle = paths.front().first_point().ccw_angle(a, b) * 2;
         
         // turn left if contour, turn right if hole
         if (was_clockwise) angle *= -1;
@@ -472,7 +474,9 @@ GCode::extrude(ExtrusionLoop loop, std::string description, double speed)
         point.rotate(angle, first_segment.a);
         
         // generate the travel move
-        gcode += this->writer.travel_to_xy(this->point_to_gcode(point), "move inwards before travel");
+        //born2b
+        //gcode += this->writer.travel_to_xy(this->point_to_gcode(point), "move inwards before travel");
+        gcode += this->writer.travel_to_xy_slow(this->point_to_gcode(point), "move inwards before travel");
     }
     
     return gcode;
@@ -575,7 +579,7 @@ GCode::_extrude(ExtrusionPath path, std::string description, double speed)
             this->config.max_volumetric_speed.value / path.mm3_per_mm
         );
     }
-    double F = speed * 60;  // convert mm/sec to mm/min
+    double F = speed * 60;  //?convert mm/sec to mm/min
     
     // extrude arc or line
     if (path.is_bridge() && this->enable_cooling_markers)
