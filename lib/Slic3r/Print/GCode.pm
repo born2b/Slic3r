@@ -79,7 +79,7 @@ sub BUILD {
             if (@mm3_per_mm) {
                 my $min_mm3_per_mm = min(@mm3_per_mm);
                 # In order to honor max_print_speed we need to find a target volumetric
-                # speed that we can use throughout the print. So we define this target 
+                #?speed that we can use throughout the print. So we define this target 
                 # volumetric speed as the volumetric speed produced by printing the 
                 # smallest cross-section at the maximum speed: any larger cross-section
                 # will need slower feedrates.
@@ -152,7 +152,7 @@ sub export {
         print  $fh "\n";
     }
     
-    # prepare the helper object for replacing placeholders in custom G-code and output filename
+    #?prepare the helper object for replacing placeholders in custom G-code and output filename
     $self->placeholder_parser->update_timestamp;
     
     print $fh $gcodegen->writer->set_fan(0, 1)
@@ -378,6 +378,9 @@ sub process_layer {
         $gcode .= $self->_gcodegen->writer->set_bed_temperature($self->print->config->bed_temperature)
             if $self->print->config->bed_temperature && $self->print->config->bed_temperature != $self->print->config->first_layer_bed_temperature;
         $self->_second_layer_things_done(1);
+#born2b
+		$gcode .= "G91\nG1 Z1 E-1 F1200\nG4 P10000\nG4 P10000\nG4 P10000\nG4 P10000\nG4 P10000\nG4 P10000 ;Regulation temperature\nG1 Z-1 E1 F600\nG90\n"
+#born2b
     }
     
     # set new layer - this will change Z and force a retraction if retract_layer_change is enabled

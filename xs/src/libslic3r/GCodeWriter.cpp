@@ -307,7 +307,7 @@ GCodeWriter::travel_to_xy_slow(const Pointf &point, const std::string &comment)
     std::ostringstream gcode;
     gcode << "G1 X" << XYZF_NUM(point.x)
           <<   " Y" << XYZF_NUM(point.y)
-          <<   " F600";
+          <<   " F1200";
     COMMENT(comment);
     gcode << "\n";
     return gcode.str();

@@ -454,7 +454,7 @@ GCode::extrude(ExtrusionLoop loop, std::string description, double speed)
         
          //born2b
        //double angle = paths.front().first_point().ccw_angle(a, b) / 3;
-       double angle = paths.front().first_point().ccw_angle(a, b) * 2;
+       double angle = paths.front().first_point().ccw_angle(a, b) * 1.875;
         
         // turn left if contour, turn right if hole
         if (was_clockwise) angle *= -1;
@@ -475,7 +475,7 @@ GCode::extrude(ExtrusionLoop loop, std::string description, double speed)
         
         // generate the travel move
         //born2b
-        //gcode += this->writer.travel_to_xy(this->point_to_gcode(point), "move inwards before travel");
+       // gcode += this->writer.travel_to_xy(this->point_to_gcode(point), "move inwards before travel");
         gcode += this->writer.travel_to_xy_slow(this->point_to_gcode(point), "move inwards before travel");
     }
     
