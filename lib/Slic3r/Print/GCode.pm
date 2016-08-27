@@ -379,7 +379,7 @@ sub process_layer {
             if $self->print->config->bed_temperature && $self->print->config->bed_temperature != $self->print->config->first_layer_bed_temperature;
         $self->_second_layer_things_done(1);
 #born2b
-		$gcode .= "G91\nG1 Z1 E-1 F1200\nG4 P10000\nG4 P10000\nG4 P10000\nG4 P10000\nG4 P10000\nG4 P10000 ;Regulation temperature\nG1 Z-1 E1 F600\nG90\n"
+		$gcode .= "G91\nG1 Z1 E-1 F1200\nG90\nG1 Y0 F2000\nG91\nG4 P10000\nG4 P10000\nG4 P10000\nG4 P10000\nG4 P10000\nG4 P10000 ;Regulation temperature\nG1 Z-1 E1 F600\nG90\n"
 #born2b
     }
     

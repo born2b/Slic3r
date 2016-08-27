@@ -332,7 +332,9 @@ sub make_brim {
     # brim is only printed on first layer and uses perimeter extruder
     my $first_layer_height = $self->skirt_first_layer_height;
     my $flow = $self->brim_flow;
-    my $mm3_per_mm = $flow->mm3_per_mm;
+  #  my $mm3_per_mm = $flow->mm3_per_mm;
+  #born2b
+    my $mm3_per_mm = $flow->mm3_per_mm * 1.2;
     
     my $grow_distance = $flow->scaled_width / 2;
     my @islands = (); # array of polygons
@@ -362,7 +364,7 @@ sub make_brim {
         # JT_SQUARE ensures no vertex is outside the given offset distance
         # -0.5 because islands are not represented by their centerlines
         # (first offset more, then step back - reverse order than the one used for 
-        # perimeters because here we're offsetting outwards)
+        #?perimeters because here we're offsetting outwards)
         push @loops, @{offset2(\@islands, ($i + 0.5) * $flow->scaled_spacing, -1.0 * $flow->scaled_spacing, 100000, JT_SQUARE)};
     }
     

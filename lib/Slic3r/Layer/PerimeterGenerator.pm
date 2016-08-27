@@ -373,7 +373,7 @@ sub _traverse_loops {
                 );
             }
             
-	        if ($self->layer_id < ($self->object_config->raft_layers + 1)) {
+	        if ($self->layer_id < ($self->object_config->raft_layers + 2)) {
             # get overhang paths by checking what parts of this loop fall 
             #?outside the grown lower slices (thus where the distance between
             # the loop centerline and original lower slices is >= half nozzle diameter
@@ -381,7 +381,6 @@ sub _traverse_loops {
                 push @paths, Slic3r::ExtrusionPath->new(
                     polyline        => $polyline,
                     role            => $role,
-                  #  mm3_per_mm      => $self->_mm3_per_mm_overhang * 1.2,
                     mm3_per_mm      => $self->_mm3_per_mm_overhang,
                     width           => $self->overhang_flow->width,
                     height          => $self->overhang_flow->height,

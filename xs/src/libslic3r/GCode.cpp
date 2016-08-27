@@ -305,6 +305,10 @@ GCode::change_layer(const Layer &layer)
     std::string gcode;
     if (this->layer_count > 0) {
         gcode += this->writer.update_progress(this->layer_index, this->layer_count);
+	//born2b
+	gcode += ";<test_checkin>\n";
+    //born2b
+    
     }
     
     coordf_t z = layer.print_z + this->config.z_offset.value;  // in unscaled coordinates
@@ -439,7 +443,7 @@ GCode::extrude(ExtrusionLoop loop, std::string description, double speed)
     
     if (this->wipe.enable)
         this->wipe.path = paths.front().polyline;  // TODO: don't limit wipe to last path
-    
+
     // make a little move inwards before leaving loop
     if (paths.back().role == erExternalPerimeter && this->layer != NULL && this->config.perimeters > 1) {
         Polyline &last_path_polyline = paths.back().polyline;
@@ -476,7 +480,8 @@ GCode::extrude(ExtrusionLoop loop, std::string description, double speed)
         // generate the travel move
         //born2b
        // gcode += this->writer.travel_to_xy(this->point_to_gcode(point), "move inwards before travel");
-        gcode += this->writer.travel_to_xy_slow(this->point_to_gcode(point), "move inwards before travel");
+      //  gcode += this->writer.travel_to_xy_slow(this->point_to_gcode(last_pos), "move inwards before travel");
+        gcode += this->writer.travel_to_xy(this->point_to_gcode(last_pos), "move inwards before travel");
     }
     
     return gcode;

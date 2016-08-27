@@ -264,7 +264,7 @@ sub make_fill {
         
         #born2b
         my $mm3_per_mmTOP = $mm3_per_mm * 1.00;
-        my $mm3_per_mmBRIDGE = $mm3_per_mm * 1.4;
+        my $mm3_per_mmBRIDGE = $mm3_per_mm * 1.2;
         #born2b
         
         # save into layer

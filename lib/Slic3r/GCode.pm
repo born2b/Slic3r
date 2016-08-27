@@ -101,10 +101,6 @@ sub change_layer {
     # forget last wiping path as wiping after raising Z is pointless
     $self->wipe->path(undef);
     
-	#born2b
-	$gcode .= ";<KEEPWAIT>\n";
-    #born2b
-
     return $gcode;
 }
 
@@ -324,7 +320,7 @@ sub _extrude_path {
             $self->config->max_volumetric_speed / $path->mm3_per_mm,
         );
     }
-    my $F = $speed * 60;  # convert mm/sec to mm/min
+    my $F = $speed * 60;  #?convert mm/sec to mm/min
     
     # extrude arc or line
     $gcode .= ";_BRIDGE_FAN_START\n" if $path->is_bridge && $self->enable_cooling_markers;
@@ -575,10 +571,8 @@ sub wipe {
     
     # Reduce feedrate a bit; travel speed is often too high to move on existing material.
     # Too fast = ripping of existing material; too slow = short wipe path, thus more blob.
-	#born2b
-    my $wipe_speed = $gcodegen->writer->config->get('travel_speed') * 0.2;
-	#born2b
-    
+    my $wipe_speed = $gcodegen->writer->config->get('travel_speed');
+
     # get the retraction length
     my $length = $toolchange
         ? $gcodegen->writer->extruder->retract_length_toolchange
