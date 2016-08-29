@@ -481,7 +481,7 @@ GCode::extrude(ExtrusionLoop loop, std::string description, double speed)
         //born2b
        // gcode += this->writer.travel_to_xy(this->point_to_gcode(point), "move inwards before travel");
       //  gcode += this->writer.travel_to_xy_slow(this->point_to_gcode(last_pos), "move inwards before travel");
-        gcode += this->writer.travel_to_xy(this->point_to_gcode(last_pos), "move inwards before travel");
+        gcode += this->writer.travel_to_xy_slow(this->point_to_gcode(last_pos), "move inwards before travel");
     }
     
     return gcode;
