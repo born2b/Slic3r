@@ -79,16 +79,16 @@ sub flush {
 	    my $waitms = ($self->config->slowdown_below_layer_time - $elapsed) * 1000;
 		my $waitcode = "";
 	#	$waitcode = sprintf("G91\nG1 Z0.2 E-0.4 F1200\nG4 P%d\nG1 Z-0.2 E0.3 F600\nG90\n", $waitms);
-	#	$waitcode = $self->gcodegen->writer->set_fan($self->config->bridge_fan_speed, 1);
 	#	$waitcode .= sprintf("G91\nG1 Z0.2 E-2.0 F1200\nG4 P%d\nG1 Z-0.2 E2.0 F600\nG90\n", $waitms);
 		$waitcode .= "G91\n";
-		$waitcode .= sprintf("G1 E-%d F1200\n", 1.0);
-		$waitcode .= "G1 Z0.2 F1200\n";
-		$waitcode .= sprintf("G4 P%d\n", $waitms);
-		$waitcode .= sprintf("G1 E%d F1200\n", 1.0);
-		$waitcode .= "G1 Z-0.2 F1200\n";
-		$waitcode .= "G90\n";
+	#	$waitcode .= $self->gcodegen->writer->set_fan($self->config->bridge_fan_speed, 1);
+		$waitcode .= sprintf("G1 E-%d 3600\n", 1.0);
 	#	$waitcode .= $self->gcodegen->writer->set_fan($fan_speed, 1);
+		$waitcode .= "G1 Z0.05 F1200\n";
+		$waitcode .= sprintf("G4 P%d\n", $waitms);
+		$waitcode .= sprintf("G1 E%d 3600\n", 1.0);
+		$waitcode .= "G1 Z-0.05 F1200\n";
+		$waitcode .= "G90\n";
 		$gcode =~ s/;<KEEPWAIT>\n/$waitcode/;
     } else{
         $gcode =~ s/;<KEEPWAIT>\n//;

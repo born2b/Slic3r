@@ -153,7 +153,9 @@ Wipe::wipe(GCode &gcodegen, bool toolchange)
     
     /*  Reduce feedrate a bit; travel speed is often too high to move on existing material.
         Too fast = ripping of existing material; too slow = short wipe path, thus more blob.  */
-    double wipe_speed = gcodegen.writer.config.travel_speed.value * 0.8;
+			//born2b
+    //double wipe_speed = gcodegen.writer.config.travel_speed.value * 0.8;
+    double wipe_speed = gcodegen.writer.config.travel_speed.value * 0.05;
     
     // get the retraction length
     double length = toolchange
@@ -174,7 +176,6 @@ Wipe::wipe(GCode &gcodegen, bool toolchange)
             this->path.points.begin() + 1,
             this->path.points.end()
         );
-        
         wipe_path.clip_end(wipe_path.length() - wipe_dist);
     
         // subdivide the retraction in segments
@@ -184,16 +185,20 @@ Wipe::wipe(GCode &gcodegen, bool toolchange)
             double segment_length = line->length();
             /*  Reduce retraction length a bit to avoid effective retraction speed to be greater than the configured one
                 due to rounding (TODO: test and/or better math for this)  */
-            double dE = length * (segment_length / wipe_dist) * 0.95;
+			//born2b
+       //     double dE = length * (segment_length / wipe_dist) * 0.95;//origin
+            double dE = length * (segment_length / wipe_dist) * 0.0;
 			//born2b
            // gcode += gcodegen.writer.set_speed(wipe_speed*60);
-            gcode += gcodegen.writer.set_speed(wipe_speed*15);
+            gcode += gcodegen.writer.set_speed(wipe_speed*250);
 			//born2b
+			/*origin
             gcode += gcodegen.writer.extrude_to_xy(
                 gcodegen.point_to_gcode(line->b),
                 -dE,
                 (std::string)"wipe and retract" + (gcodegen.enable_cooling_markers ? ";_WIPE" : "")
             );
+            */
             retracted += dE;
         }
         gcodegen.writer.extruder()->retracted += retracted;
@@ -457,8 +462,9 @@ GCode::extrude(ExtrusionLoop loop, std::string description, double speed)
         }
         
          //born2b
-       //double angle = paths.front().first_point().ccw_angle(a, b) / 3;
-       double angle = paths.front().first_point().ccw_angle(a, b) * 1.875;
+       //double angle = paths.front().first_point().ccw_angle(a, b) / 3;origin
+     //  double angle = paths.front().first_point().ccw_angle(a, b) * 1.875;
+       double angle = paths.front().first_point().ccw_angle(a, b) * 2.2;
         
         // turn left if contour, turn right if hole
         if (was_clockwise) angle *= -1;
@@ -479,9 +485,9 @@ GCode::extrude(ExtrusionLoop loop, std::string description, double speed)
         
         // generate the travel move
         //born2b
-       // gcode += this->writer.travel_to_xy(this->point_to_gcode(point), "move inwards before travel");
-      //  gcode += this->writer.travel_to_xy_slow(this->point_to_gcode(last_pos), "move inwards before travel");
-        gcode += this->writer.travel_to_xy_slow(this->point_to_gcode(last_pos), "move inwards before travel");
+      //	gcode += this->writer.travel_to_xy(this->point_to_gcode(point), "move inwards before travel");origin
+      	gcode += this->writer.travel_to_xy_slow(this->point_to_gcode(point), "move inwards before travel");
+        gcode += this->writer.travel_to_xy(this->point_to_gcode(last_pos), "move inwards before travel");
     }
     
     return gcode;
