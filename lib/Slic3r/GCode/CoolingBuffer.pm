@@ -84,10 +84,10 @@ sub flush {
 	#	$waitcode .= $self->gcodegen->writer->set_fan($self->config->bridge_fan_speed, 1);
 		$waitcode .= sprintf("G1 E-%d 3600\n", 1.0);
 	#	$waitcode .= $self->gcodegen->writer->set_fan($fan_speed, 1);
-		$waitcode .= "G1 Z0.05 F1200\n";
+	#	$waitcode .= "G1 Z0.05 F1200\n";
 		$waitcode .= sprintf("G4 P%d\n", $waitms);
 		$waitcode .= sprintf("G1 E%d 3600\n", 1.0);
-		$waitcode .= "G1 Z-0.05 F1200\n";
+	#	$waitcode .= "G1 Z-0.05 F1200\n";
 		$waitcode .= "G90\n";
 		$gcode =~ s/;<KEEPWAIT>\n/$waitcode/;
     } else{

@@ -464,10 +464,14 @@ GCode::extrude(ExtrusionLoop loop, std::string description, double speed)
          //born2b
        //double angle = paths.front().first_point().ccw_angle(a, b) / 3;origin
      //  double angle = paths.front().first_point().ccw_angle(a, b) * 1.875;
-       double angle = paths.front().first_point().ccw_angle(a, b) * 2.2;
+    //   double angle = paths.front().first_point().ccw_angle(a, b) * 2.2;//円でベスト
+       double angle = paths.front().first_point().ccw_angle(a, b) * 0.1;//バランス的にこれ位か
+       double angle2 = paths.front().first_point().ccw_angle(a, b) * 0.75;//
         
         // turn left if contour, turn right if hole
         if (was_clockwise) angle *= -1;
+        // born2b
+        if (was_clockwise) angle2 *= -1;
         
         // create the destination point along the first segment and rotate it
         // we make sure we don't exceed the segment length because we don't know
@@ -487,7 +491,11 @@ GCode::extrude(ExtrusionLoop loop, std::string description, double speed)
         //born2b
       //	gcode += this->writer.travel_to_xy(this->point_to_gcode(point), "move inwards before travel");origin
       	gcode += this->writer.travel_to_xy_slow(this->point_to_gcode(point), "move inwards before travel");
-        gcode += this->writer.travel_to_xy(this->point_to_gcode(last_pos), "move inwards before travel");
+      //  gcode += this->writer.travel_to_xy(this->point_to_gcode(last_pos), "move inwards before travel");
+     //   Point point2 = first_segment.point_at(distance);
+        Point point2 = first_segment.point_at(distance * 2);
+        point2.rotate(angle2, first_segment.a);
+        gcode += this->writer.travel_to_xy(this->point_to_gcode(point2), "move inwards before travel");
     }
     
     return gcode;
